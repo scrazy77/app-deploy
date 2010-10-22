@@ -11,8 +11,17 @@ module AppDeploy
     def daemonize pid_path, log_path, user, group, chdir
       Dir.chdir(chdir) if chdir
 
-      user  ||= Etc.getpwuid(Process.uid).name
-      group ||= Etc.getpwuid(Process.gid).name
+      begin
+        user  ||= Etc.getpwuid(Process.uid).name
+        group ||= Etc.getpwuid(Process.gid).name
+      rescue Exception => e
+        puts "Error when grabbing name from group & user with :#{e}"
+        user  ||= Etc.getpwuid(Process.uid).name
+        group ||= user
+        puts "Grabbing Success"
+      end
+      
+
 
       Daemon.change_privilege(user, group)
 
