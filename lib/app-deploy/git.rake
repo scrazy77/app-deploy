@@ -7,7 +7,7 @@ namespace :app do
 
     puts "Invoking git #{cmd}..."
     begin
-      sh "git #{cmd}"
+      Kernel::system "git #{cmd}"
     rescue RuntimeError => e
       puts e
     end
@@ -15,7 +15,7 @@ namespace :app do
     AppDeploy.each(:github){ |opts|
       puts "Invoking git #{cmd} on #{opts[:github_project]}..."
       begin
-        sh "git #{cmd}"
+        Kernel::system "git #{cmd}"
       rescue RuntimeError => e
         puts e
       end
@@ -30,13 +30,13 @@ namespace :app do
     desc 'make anything reflect master state'
     task :stash do
       puts 'Stashing...'
-      sh 'git stash'
+      Kernel::system 'git stash'
     end
 
     desc 'init and update submodule'
     task :submodule do
-      sh 'git submodule init'
-      sh 'git submodule update'
+      Kernel::system 'git submodule init'
+      Kernel::system 'git submodule update'
     end
 
     desc 'clone repoitory from github'
@@ -51,14 +51,14 @@ namespace :app do
     task :pull do
       puts 'Pulling...'
       begin
-        sh 'git pull' if `git remote` =~ /^origin$/
+        Kernel::system 'git pull' if `git remote` =~ /^origin$/
       rescue RuntimeError => e
         puts e
       end
 
       AppDeploy.each(:github){ |opts|
         puts "Pulling #{opts[:github_project]}..."
-        sh 'git pull'
+        Kernel::system 'git pull'
       }
     end
 

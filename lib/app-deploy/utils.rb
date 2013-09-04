@@ -81,8 +81,8 @@ module AppDeploy
     if File.exist?(path)
       puts "Skip #{proj} because #{path} exists"
     else
-      sh "git clone git://github.com/#{user}/#{proj}.git #{path}"
-      sh "git --git-dir #{path}/.git gc"
+      Kernel::system "git clone git://github.com/#{user}/#{proj}.git #{path}"
+      Kernel::system "git --git-dir #{path}/.git gc"
     end
   end
 
@@ -114,26 +114,26 @@ module AppDeploy
   def uninstall_gem opts
     gem_name = opts[:gem] || opts[:github_project]
     if AppDeploy.installed_gem?(gem_name)
-      sh "#{gem_bin} uninstall #{gem_name}"
+      Kernel::system "#{gem_bin} uninstall #{gem_name}"
     else
       puts "Skip #{gem_name} because it was not installed"
     end
   end
 
   def install_gem_remote gem_name, source = nil
-    sh "#{gem_bin} install #{gem_name}#{source ? ' --source ' + source : ''}"
+    Kernel::system "#{gem_bin} install #{gem_name}#{source ? ' --source ' + source : ''}"
   end
 
   def install_gem_local proj, task
     case task
       when 'bones'
-        sh 'rake clobber'
-        sh 'rake gem:package'
-        sh "#{gem_bin} install --local pkg/#{proj}-*.gem --no-ri --no-rdoc"
+        Kernel::system 'rake clobber'
+        Kernel::system 'rake gem:package'
+        Kernel::system "#{gem_bin} install --local pkg/#{proj}-*.gem --no-ri --no-rdoc"
 
       when 'hoe'
-        sh 'rake gem'
-        sh "#{gem_bin} install --local pkg/#{proj}-*.gem --no-ri --no-rdoc"
+        Kernel::system 'rake gem'
+        Kernel::system "#{gem_bin} install --local pkg/#{proj}-*.gem --no-ri --no-rdoc"
 
       when Proc
         task.call

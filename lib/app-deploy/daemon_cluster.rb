@@ -36,7 +36,7 @@ module AppDeploy
 
     def start config, cmd
       puts "Starting ##{config[:num]} #{config[:ruby]} #{config[:script]} #{config[:args]}..."
-      sh cmd
+      Kernel::system cmd
       puts
     end
 

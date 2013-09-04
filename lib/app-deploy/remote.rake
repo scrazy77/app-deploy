@@ -26,14 +26,14 @@ namespace :app do
     task :sh, [:hosts, :script] do |t, args|
       args[:hosts].split(',').map{ |host|
         script = args[:script].gsub('"', '\\"')
-        Thread.new{ sh "ssh #{host} \"#{script}\"" }
+        Thread.new{ Kernel::system "ssh #{host} \"#{script}\"" }
       }.each(&:join)
     end
 
     desc 'upload a file to remote machines'
     task :upload, [:file, :hosts, :path] do |t, args|
       args[:hosts].split(',').each{ |host|
-        sh "scp #{args[:file]} #{host}:#{args[:path]}"
+        Kernel::system "scp #{args[:file]} #{host}:#{args[:path]}"
       }
     end
 
@@ -42,7 +42,7 @@ namespace :app do
       useradd = "sudo useradd -m #{args[:user]}"
       args[:hosts].split(',').each{ |host|
         script = "#{useradd}; #{args[:script]}".gsub('"', '\\"')
-        sh "ssh #{host} \"#{script}\""
+        Kernel::system "ssh #{host} \"#{script}\""
       }
     end
 

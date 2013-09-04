@@ -7,7 +7,7 @@ ns = namespace :app do
       if File.exist?(args[:pidfile])
         puts "WARN: pid file #{args[:pidfile]} already exists, ignoring."
       else
-        sh args[:script]
+        Kernel::system args[:script]
       end
     end
 
